@@ -129,7 +129,7 @@ Este projeto foi desenvolvido seguindo boas práticas de programação:
 - [ ] Implementar captura en passant
 - [ ] Adicionar temas visuais
 - [ ] Implementar análise de posição
-- [ ] Adicionar modo contra computador
+- [✔] Adicionar modo contra computador
 
 ## Contribuição
 
