@@ -103,11 +103,9 @@ chmod +x run.sh
 - **Histórico**: Lista de todos os movimentos realizados
 - **Status**: Indica turno atual e estado do jogo
 
-## Controles
+## Controle
 
 - **Botão "Novo Jogo"**: Reinicia a partida
-- **Botão "Salvar Jogo"**: Salva o estado atual (funcionalidade futura)
-- **Botão "Carregar Jogo"**: Carrega jogo salvo (funcionalidade futura)
 
 ## Tecnologias Utilizadas
 
