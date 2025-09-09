@@ -137,4 +137,4 @@ Sinta-se à vontade para contribuir com melhorias, correções de bugs ou novas 
 
 ## Licença
 
-Este projeto é de código aberto e está disponível sob a licença MIT.
+Este projeto é de código aberto e está disponível.
