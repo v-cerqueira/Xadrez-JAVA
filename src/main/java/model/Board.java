@@ -7,6 +7,7 @@ import model.pieces.*;
  */
 public class Board {
     private Piece[][] squares;
+    private Position enPassantTarget; // casa alvo de en passant (se houver)
     
     public Board() {
         squares = new Piece[8][8];
@@ -88,6 +89,14 @@ public class Board {
             piece.setHasMoved(true);
         }
     }
+
+    public Position getEnPassantTarget() {
+        return enPassantTarget;
+    }
+
+    public void setEnPassantTarget(Position enPassantTarget) {
+        this.enPassantTarget = enPassantTarget;
+    }
     
     /**
      * Verifica se uma posição está vazia
@@ -106,6 +115,7 @@ public class Board {
                 copy.squares[row][col] = null;
             }
         }
+        copy.enPassantTarget = (enPassantTarget == null) ? null : new Position(enPassantTarget.getRow(), enPassantTarget.getCol());
         
         for (int row = 0; row < 8; row++) {
             for (int col = 0; col < 8; col++) {
@@ -152,5 +162,22 @@ public class Board {
             }
         }
         return null;
+    }
+
+    /**
+     * Verifica se a casa está atacada por alguma peça da cor informada
+     */
+    public boolean isSquareAttacked(Position position, boolean byWhite) {
+        for (int row = 0; row < 8; row++) {
+            for (int col = 0; col < 8; col++) {
+                Piece piece = squares[row][col];
+                if (piece != null && piece.isWhite() == byWhite) {
+                    if (piece.isValidMove(position, this)) {
+                        return true;
+                    }
+                }
+            }
+        }
+        return false;
     }
 }

@@ -103,9 +103,11 @@ chmod +x run.sh
 - **Histórico**: Lista de todos os movimentos realizados
 - **Status**: Indica turno atual e estado do jogo
 
-## Controle
+## Controles
 
 - **Botão "Novo Jogo"**: Reinicia a partida
+- **Botão "Salvar Jogo"**: Salva o estado atual (funcionalidade futura)
+- **Botão "Carregar Jogo"**: Carrega jogo salvo (funcionalidade futura)
 
 ## Tecnologias Utilizadas
 
@@ -129,7 +131,7 @@ Este projeto foi desenvolvido seguindo boas práticas de programação:
 - [ ] Implementar captura en passant
 - [ ] Adicionar temas visuais
 - [ ] Implementar análise de posição
-- [✔] Adicionar modo contra computador
+- [ ] Adicionar modo contra computador
 
 ## Contribuição
 
@@ -137,4 +139,4 @@ Sinta-se à vontade para contribuir com melhorias, correções de bugs ou novas 
 
 ## Licença
 
-Este projeto é de código aberto e está disponível.
+Este projeto é de código aberto e está disponível sob a licença MIT.

@@ -4,7 +4,6 @@ import model.*;
 import model.pieces.*;
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.List;
@@ -16,10 +15,12 @@ public class ChessGUI extends JFrame {
     private Game game;
     private JButton[][] boardButtons;
     private JLabel statusLabel;
+    private JLabel aiModeLabel;
     private JTextArea moveHistoryArea;
     private JButton newGameButton;
     private JCheckBox aiCheckBox;
     private JComboBox<String> difficultyComboBox;
+    private JButton supremeAIButton;
     
     // Cores do tabuleiro - Tema Futurista
     private static final Color LIGHT_SQUARE = new Color(30, 30, 50);        // Azul escuro futurista
@@ -119,6 +120,13 @@ public class ChessGUI extends JFrame {
         statusLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
         panel.add(statusLabel);
         
+        // Indicador do modo de IA
+        aiModeLabel = new JLabel("IA: Desativada");
+        aiModeLabel.setFont(new Font("Arial", Font.PLAIN, 12));
+        aiModeLabel.setForeground(new Color(255, 0, 255));
+        aiModeLabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(aiModeLabel);
+
         panel.add(Box.createVerticalStrut(20));
         
         // Botões de controle
@@ -128,7 +136,7 @@ public class ChessGUI extends JFrame {
         newGameButton.setContentAreaFilled(true);
         newGameButton.setFocusPainted(false);
         newGameButton.setBackground(new Color(25, 25, 45)); // Mesmo fundo do painel lateral
-        newGameButton.setForeground(new Color(25, 25, 5)); // Texto ciano
+        newGameButton.setForeground(new Color(25, 25, 45)); // Texto igual ao fundo (invisível)
         newGameButton.setBorder(BorderFactory.createLineBorder(new Color(0, 255, 255), 1)); // Borda ciano mais sutil
         newGameButton.addActionListener(e -> {
             System.out.println("Botão Novo Jogo clicado!");
@@ -168,13 +176,13 @@ public class ChessGUI extends JFrame {
         difficultyComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
         difficultyComboBox.setOpaque(true);
         difficultyComboBox.setBackground(new Color(25, 25, 45)); // Mesmo fundo do painel lateral
-        difficultyComboBox.setForeground(new Color(25, 25, 45)); // Texto ciano
+        difficultyComboBox.setForeground(Color.WHITE); // Texto visível
         difficultyComboBox.setRenderer(new DefaultListCellRenderer() {
             @Override
             public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
                 super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
                 setBackground(new Color(25, 25, 45));
-                setForeground(new Color(0, 255, 255));
+                setForeground(Color.WHITE); // Texto visível no dropdown
                 return this;
             }
         });
@@ -184,6 +192,20 @@ public class ChessGUI extends JFrame {
             changeDifficulty();
         });
         panel.add(difficultyComboBox);
+        
+        panel.add(Box.createVerticalStrut(10));
+        
+        // Botão IA Suprema
+        supremeAIButton = new JButton("Ativar modo IA Suprema");
+        supremeAIButton.setAlignmentX(Component.CENTER_ALIGNMENT);
+        supremeAIButton.setOpaque(true);
+        supremeAIButton.setContentAreaFilled(true);
+        supremeAIButton.setFocusPainted(false);
+        supremeAIButton.setBackground(new Color(25, 25, 45));
+        supremeAIButton.setForeground(new Color(25, 25, 45)); // Texto igual ao fundo (invisível)
+        supremeAIButton.setBorder(BorderFactory.createLineBorder(new Color(255, 0, 255), 1));
+        supremeAIButton.addActionListener(e -> toggleSupremeAI());
+        panel.add(supremeAIButton);
         
         panel.add(Box.createVerticalStrut(20));
         
@@ -293,6 +315,7 @@ public class ChessGUI extends JFrame {
             if (game.isKingInCheck(game.isWhiteTurn())) {
                 statusLabel.setText("Turno: " + turn + " (XEQUE!)");
             }
+            updateAIModeLabel();
         }
     }
     
@@ -372,9 +395,11 @@ public class ChessGUI extends JFrame {
             JOptionPane.showMessageDialog(this, 
                 "IA habilitada! Você jogará contra o computador.\n" +
                 "Dificuldade atual: " + difficultyComboBox.getSelectedItem());
+            updateAIModeLabel();
         } else {
             JOptionPane.showMessageDialog(this, 
                 "IA desabilitada! Você jogará contra outro jogador.");
+            updateAIModeLabel();
         }
     }
     
@@ -389,6 +414,36 @@ public class ChessGUI extends JFrame {
         String difficultyName = difficultyComboBox.getSelectedItem().toString();
         JOptionPane.showMessageDialog(this, 
             "Dificuldade da IA alterada para: " + difficultyName);
+        updateAIModeLabel();
+    }
+    
+    /**
+     * Liga/desliga o modo IA Suprema
+     */
+    private void toggleSupremeAI() {
+        boolean enable = !game.isAISupremeMode();
+        game.setAISupremeMode(enable);
+        supremeAIButton.setText(enable ? "Desativar modo IA Suprema" : "Ativar modo IA Suprema");
+        // Reflete visualmente a dificuldade 10 ao ativar o modo supremo
+        if (enable) {
+            difficultyComboBox.setSelectedIndex(9); // Nível 10
+        }
+        String msg = enable ?
+            "Modo IA Suprema ativado! Avaliação neural fictícia habilitada (dificuldade 10)." :
+            "Modo IA Suprema desativado. Voltando à IA tradicional.";
+        JOptionPane.showMessageDialog(this, msg);
+        updateAIModeLabel();
+    }
+
+    private void updateAIModeLabel() {
+        String status = game.isAIEnabled() ? "Ativa" : "Desativada";
+        if (game.isAIEnabled() && game.isAISupremeMode()) {
+            aiModeLabel.setText("IA: Suprema (Neural) • Nível " + game.getAIDifficulty());
+        } else if (game.isAIEnabled()) {
+            aiModeLabel.setText("IA: Tradicional • Nível " + game.getAIDifficulty());
+        } else {
+            aiModeLabel.setText("IA: Desativada");
+        }
     }
     
     /**

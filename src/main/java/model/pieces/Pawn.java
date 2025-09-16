@@ -44,6 +44,14 @@ public class Pawn extends Piece {
         if (isValidPosition(rightDiagonal) && hasEnemyPieceAt(board, rightDiagonal)) {
             moves.add(rightDiagonal);
         }
+
+        // En passant
+        Position enPassant = board.getEnPassantTarget();
+        if (enPassant != null && enPassant.getRow() == position.getRow() + direction) {
+            if (Math.abs(enPassant.getCol() - position.getCol()) == 1) {
+                moves.add(new Position(enPassant.getRow(), enPassant.getCol()));
+            }
+        }
         
         return moves;
     }
@@ -73,6 +81,11 @@ public class Pawn extends Piece {
         // Captura diagonal
         else if (colDiff == 1 && rowDiff == direction) {
             return hasEnemyPieceAt(board, to);
+        }
+        // En passant: destino coincide com alvo e a casa final está vazia
+        Position ep = board.getEnPassantTarget();
+        if (ep != null && ep.equals(to) && colDiff == 1 && rowDiff == direction) {
+            return board.isEmpty(to);
         }
         
         return false;

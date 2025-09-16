@@ -79,7 +79,22 @@ public class King extends Piece {
             }
             currentCol += direction;
         }
-        
+        // Regras adicionais de roque real:
+        // - O rei não pode estar em xeque
+        // - As casas pelas quais o rei passa (coluna +/-1) e a casa de destino não podem estar atacadas
+        boolean enemyIsWhite = !isWhite;
+        Position from = position;
+        Position through = new Position(position.getRow(), position.getCol() + direction);
+        Position to = new Position(position.getRow(), position.getCol() + 2 * direction);
+        if (board.isSquareAttacked(from, enemyIsWhite)) {
+            return false;
+        }
+        if (board.isSquareAttacked(through, enemyIsWhite)) {
+            return false;
+        }
+        if (board.isSquareAttacked(to, enemyIsWhite)) {
+            return false;
+        }
         return true;
     }
     
