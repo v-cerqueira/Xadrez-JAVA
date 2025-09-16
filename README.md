@@ -91,6 +91,7 @@ chmod +x run.sh
 - **Rei**: Move uma casa em qualquer direção
 
 ### Regras Especiais
+- **Passant**: Captura especial de peão, feita quando um peão adversário avança duas casas e pode ser tomado como se tivesse andado apenas uma.
 - **Roque**: Movimento especial entre rei e torre
 - **Promoção**: Peão vira rainha ao chegar na última fileira
 - **Xeque**: Detecção automática quando o rei está em perigo
@@ -128,10 +129,8 @@ Este projeto foi desenvolvido seguindo boas práticas de programação:
 ## Próximas Funcionalidades
 
 - [ ] Salvar e carregar jogos
-- [ ] Implementar captura en passant
 - [ ] Adicionar temas visuais
 - [ ] Implementar análise de posição
-- [ ] Adicionar modo contra computador
 
 ## Contribuição
 
