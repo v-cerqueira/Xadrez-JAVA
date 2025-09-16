@@ -5,6 +5,12 @@
 
 
 
+# Jogo de Xadrez em Java Swing
+<img width="858" height="606" alt="image" src="https://github.com/user-attachments/assets/3468d525-5580-43bd-ba9b-50ef4a128bd8" />
+<img width="474" height="121" alt="image" src="https://github.com/user-attachments/assets/cffec51e-5261-4a91-9221-a04ba831abe2" />
+<img width="315" height="116" alt="image" src="https://github.com/user-attachments/assets/069361d9-d779-495b-b561-31684d87fd5d" />
+
+
 Um jogo de xadrez completo implementado em Java usando a biblioteca Swing para interface gráfica, seguindo a arquitetura MVC (Model-View-Controller).
 
 ## Características
@@ -22,13 +28,9 @@ Um jogo de xadrez completo implementado em Java usando a biblioteca Swing para i
 ```
 src/main/java/
 ├── model/
-│   ├── Board.java          # Representa o tabuleiro
-│   ├── Game.java           # Controla o fluxo do jogo
-│   ├── Move.java           # Representa um movimento
-│   ├── Position.java       # Representa uma posição
-│   └── pieces/
-│       ├── Piece.java      # Classe abstrata para peças
-│       ├── Pawn.java       # Peão
+ - **Inteligência Artificial Avançada**: Duas opções de IA para jogar contra o computador
+ - **Seleção de IA**: Escolha entre IA Suprema (Minimax) e IA Suprema 2 (Negamax + Quiescência) na interface
+ - **Desempenho ajustável**: Profundidade da IA otimizada para velocidade e jogadas inteligentes
 │       ├── Rook.java       # Torre
 │       ├── Knight.java     # Cavalo
 │       ├── Bishop.java     # Bispo
@@ -38,6 +40,8 @@ src/main/java/
     └── ChessGUI.java       # Interface gráfica principal
 ```
 
+│   ├── IASuprema.java     # IA Minimax
+│   ├── IANivel8.java      # IA Negamax + Quiescência
 ## Requisitos
 
 - Java 11 ou superior
@@ -55,48 +59,49 @@ mvn exec:java -Dexec.mainClass="view.ChessGUI"
 
 # Ou criar um JAR executável
 mvn clean package
+6. **Jogar contra IA**: Ative a IA avançada no menu e escolha o nível desejado
 java -jar target/jogo-xadrez-1.0.0.jar
 ```
 
-### Opção 2: Compilação Manual
-```bash
-# Compilar todas as classes
-javac -d target/classes src/main/java/model/*.java src/main/java/model/pieces/*.java src/main/java/view/*.java
 
-# Executar
+### Inteligência Artificial (IA)
+- **IA Suprema (Minimax)**: Analisa jogadas futuras, simula respostas do adversário e escolhe o melhor movimento.
+- **IA Suprema 2 (Negamax + Quiescência)**: Além de simular jogadas, continua analisando capturas até a posição ficar "quieta", evitando erros em trocas de peças.
+- **Função de avaliação**: Considera valor das peças, mobilidade e segurança do rei.
+- **Seleção de IA**: Menu "IA Avançada" permite alternar entre as duas IAs ou desativar.
 java -cp target/classes view.ChessGUI
-```
-
-### Opção 3: Scripts de Execução
-```bash
-# Windows
+ - **Menu IA Avançada**: Permite escolher entre IA Suprema, IA Suprema 2 ou desativar IA
 run.bat
 
-# Linux/Mac
-chmod +x run.sh
-./run.sh
+ - **ComboBox "IA Avançada"**: Seleciona o tipo de IA para jogar contra o computador
 ```
 
-## Como Jogar
-
-1. **Iniciar o jogo**: Execute o programa e uma janela será aberta
-2. **Selecionar peça**: Clique em uma peça do seu time (brancas começam)
+ - **Algoritmos de IA clássicos**: Minimax e Negamax com busca de quiescência
 3. **Ver movimentos**: As casas possíveis serão destacadas em verde
 4. **Fazer movimento**: Clique na casa de destino
 5. **Alternar turnos**: O jogo alterna automaticamente entre brancas e pretas
 
-## Funcionalidades
-
-### Movimentos Básicos
-- **Peão**: Move uma casa para frente, captura nas diagonais
+ - **IA modular**: Fácil de expandir ou ajustar algoritmos
+ - **Foco didático**: Ideal para estudos e apresentações universitárias
 - **Torre**: Move horizontalmente e verticalmente
 - **Cavalo**: Move em L (2 casas + 1 casa perpendicular)
-- **Bispo**: Move nas diagonais
-- **Rainha**: Move em todas as direções
-- **Rei**: Move uma casa em qualquer direção
+ - [ ] Melhorar função de avaliação da IA
+ - [ ] Adicionar níveis de dificuldade para IA
 
 ### Regras Especiais
 - **Passant**: Captura especial de peão, feita quando um peão adversário avança duas casas e pode ser tomado como se tivesse andado apenas uma.
+
+## Dicas para Apresentação
+
+- Explique a diferença entre as duas IAs (Minimax e Negamax + Quiescência)
+- Mostre como alternar entre elas na interface
+- Destaque a arquitetura MVC e a modularidade do código
+- Comente sobre possíveis melhorias futuras
+
+## Referências
+
+- Algoritmos Minimax e Negamax: https://en.wikipedia.org/wiki/Minimax
+- Busca de quiescência: https://en.wikipedia.org/wiki/Quiescence_search
 - **Roque**: Movimento especial entre rei e torre
 - **Promoção**: Peão vira rainha ao chegar na última fileira
 - **Xeque**: Detecção automática quando o rei está em perigo
