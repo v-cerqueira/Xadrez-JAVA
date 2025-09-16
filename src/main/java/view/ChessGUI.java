@@ -195,18 +195,51 @@ public class ChessGUI extends JFrame {
         
         panel.add(Box.createVerticalStrut(10));
         
-        // Botão IA Suprema
-        supremeAIButton = new JButton("Ativar modo IA Suprema");
-        supremeAIButton.setAlignmentX(Component.CENTER_ALIGNMENT);
-        supremeAIButton.setOpaque(true);
-        supremeAIButton.setContentAreaFilled(true);
-        supremeAIButton.setFocusPainted(false);
-        supremeAIButton.setBackground(new Color(25, 25, 45));
-        supremeAIButton.setForeground(new Color(25, 25, 45)); // Texto igual ao fundo (invisível)
-        supremeAIButton.setBorder(BorderFactory.createLineBorder(new Color(255, 0, 255), 1));
-        supremeAIButton.addActionListener(e -> toggleSupremeAI());
-        panel.add(supremeAIButton);
-        
+        // Box para seleção de IA avançada
+        JLabel advancedAILabel = new JLabel("IA Avançada:");
+        advancedAILabel.setForeground(new Color(255, 0, 255));
+        advancedAILabel.setAlignmentX(Component.CENTER_ALIGNMENT);
+        panel.add(advancedAILabel);
+
+        JComboBox<String> advancedAIComboBox = new JComboBox<>(new String[]{"Desativada", "IA Suprema", "IA Suprema 2 (Quiescência)"});
+        advancedAIComboBox.setAlignmentX(Component.CENTER_ALIGNMENT);
+        advancedAIComboBox.setOpaque(true);
+        advancedAIComboBox.setBackground(new Color(25, 25, 45));
+        advancedAIComboBox.setForeground(Color.WHITE);
+        advancedAIComboBox.setRenderer(new DefaultListCellRenderer() {
+            @Override
+            public Component getListCellRendererComponent(JList<?> list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+                super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+                setBackground(new Color(25, 25, 45));
+                setForeground(Color.WHITE);
+                return this;
+            }
+        });
+        advancedAIComboBox.setSelectedIndex(0);
+        advancedAIComboBox.addActionListener(e -> {
+            int idx = advancedAIComboBox.getSelectedIndex();
+            if (idx == 1) {
+                // IA Suprema
+                game.setAISupremeMode(true);
+                aiCheckBox.setSelected(true);
+                game.setAIEnabled(true);
+            } else if (idx == 2) {
+                // IA Suprema 2 (Quiescência)
+                game.setAISupremeMode(false);
+                aiCheckBox.setSelected(true);
+                game.setAIEnabled(true);
+                game.setAdvancedAILevel(2); // método a ser implementado para ativar IANivel8
+            } else {
+                // Desativada
+                game.setAISupremeMode(false);
+                game.setAdvancedAILevel(0);
+                aiCheckBox.setSelected(false);
+                game.setAIEnabled(false);
+            }
+            updateAIModeLabel();
+        });
+        panel.add(advancedAIComboBox);
+
         panel.add(Box.createVerticalStrut(20));
         
         // Histórico de movimentos
@@ -427,9 +460,11 @@ public class ChessGUI extends JFrame {
         // Reflete visualmente a dificuldade 10 ao ativar o modo supremo
         if (enable) {
             difficultyComboBox.setSelectedIndex(9); // Nível 10
+            aiCheckBox.setSelected(true); // Ativa a IA automaticamente
+            game.setAIEnabled(true); // Garante que a IA está ativada
         }
         String msg = enable ?
-            "Modo IA Suprema ativado! Avaliação neural fictícia habilitada (dificuldade 10)." :
+            "Modo IA Suprema ativado! Minimax ativado automaticamente (dificuldade máxima)." :
             "Modo IA Suprema desativado. Voltando à IA tradicional.";
         JOptionPane.showMessageDialog(this, msg);
         updateAIModeLabel();

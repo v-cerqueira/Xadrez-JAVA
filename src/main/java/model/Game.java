@@ -15,6 +15,23 @@ public class Game {
     private boolean gameOver;
     private String gameResult;
     private ChessAI ai;
+    private IASuprema iaSuprema;
+    private IANivel8 iaNivel8;
+    private int advancedAILevel = 0; // 0: normal, 1: suprema, 2: suprema2
+
+    /**
+     * Define o nível da IA avançada (0: normal, 1: suprema, 2: suprema2)
+     */
+    public void setAdvancedAILevel(int level) {
+        this.advancedAILevel = level;
+    }
+
+    /**
+     * Obtém o nível da IA avançada
+     */
+    public int getAdvancedAILevel() {
+        return advancedAILevel;
+    }
     private boolean aiEnabled;
     private boolean aiSupreme; // modo IA Suprema
     private int halfmoveClock; // contador para regra dos 50 movimentos
@@ -27,7 +44,10 @@ public class Game {
         this.selectedPosition = null;
         this.gameOver = false;
         this.gameResult = null;
+
         this.ai = new ChessAI();
+        this.iaSuprema = new IASuprema();
+        this.iaNivel8 = new IANivel8();
         this.aiEnabled = false;
         this.aiSupreme = false;
         this.halfmoveClock = 0;
@@ -442,7 +462,16 @@ public class Game {
      * Faz o movimento da IA
      */
     private void makeAIMove() {
-        Move aiMove = ai.makeBestMove(this);
+        Move aiMove;
+        if (advancedAILevel == 1) {
+            // IA Suprema
+            aiMove = iaSuprema.chooseBestMove(board, false);
+        } else if (advancedAILevel == 2) {
+            // IA Suprema 2 (Quiescência)
+            aiMove = iaNivel8.chooseBestMove(board, false);
+        } else {
+            aiMove = ai.makeBestMove(this);
+        }
         if (aiMove != null) {
             // Rejeita movimentos que capturam o rei ou deixam o rei da IA em xeque
             Piece target = board.getPieceAt(aiMove.getTo());
